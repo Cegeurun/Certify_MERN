@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block title %}Booking Receipt{% endblock %}
+
+{% block content %}
+<div class="ms-3 me-3 pt-4 mb-3">
+<h2 class ="receipt">Booking Receipt</h2>
+
+<div class="cardd shadow ">
+    <div class="card-body">
+        <h5 class="card-title">Receipt ID: {{ booking.receipt_id }}</h5>
+        <p><strong>Booked By:</strong> {{ current_user.username }}</p>
+        <p><strong>Artist Name:</strong> {{ booking.artist_name }}</p>
+        <p><strong>Concert Title:</strong> {{ booking.concert_title }}</p>
+        <p><strong>Venue:</strong> {{ booking.venue.name }}</p>
+        <p><strong>Date:</strong> {{ booking.date }}</p>
+        <p><strong>Time Slot:</strong> {{ booking.time_slot }}</p>
+        <p><strong>Total Amount:</strong> ₱{{ "{:,.2f}".format(booking.amount_expected) }}</p>
+        <p><strong>Payment Method:</strong> {{ booking.transaction.payment_method }}</p>
+        <p><strong>Amount Paid:</strong> ₱{{ "{:,.2f}".format(booking.transaction.amount_paid) }}</p>
+        <p><strong>Payment Date:</strong> {{ booking.transaction.payment_date.strftime('%Y-%m-%d %H:%M:%S') }}</p>
+        <p><strong>Status:</strong> <span class="badge bg-success">{{ booking.status }}</span></p>
+    </div>
+</div>
+
+<br>
+<!-- Print Button -->
+<button onclick="window.print()" class="btn btn-primary">🖨 Print Receipt</button>
+<a href="{{ url_for('dashboard') }}" class="btn btn-secondary">Back to Dashboard</a>
+</div>
+{% endblock %}

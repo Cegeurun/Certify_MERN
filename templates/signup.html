@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block title %}Sign Up{% endblock %}
+
+{% block content %}
+<div class="mb-5 mt-5">
+<div class="row justify-content-center mb-4 pt-4">
+    <div class="col-md-6">
+        <h2 class="text-center">Sign Up</h2>
+        <form method="POST" class="shadow p-4 bg-white rounded">
+            <div class="mb-3">
+                <label class="form-label">Agency Name</label>
+                <input type="text" name="agency_name" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Username</label>
+                <input type="text" name="username" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Password</label>
+                <input type="password" name="password" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Confirm Password</label>
+                <input type="password" name="confirm_password" class="form-control" required>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Sign Up</button>
+        </form>
+        <p class="text-center mt-3">Already have an account? <a href="{{ url_for('login') }}">Login</a></p>
+    </div>
+</div>
+</div>
+{% endblock %}
