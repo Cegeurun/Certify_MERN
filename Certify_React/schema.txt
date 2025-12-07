@@ -1,0 +1,227 @@
+
+// do this first
+use concert_booking_db
+
+
+// then paste the rest of the code
+db.users.drop()
+db.venues.drop()
+db.bookings.drop()
+db.transactions.drop()
+
+// create users collection
+db.createCollection("users", {
+  validator: {
+    $jsonSchema: {
+      bsonType: "object",
+      required: ["agency_name", "username", "password"],
+      properties: {
+        agency_name: {
+          bsonType: "string",
+          maxLength: 100
+        },
+        username: {
+          bsonType: "string",
+          maxLength: 50
+        },
+        password: {
+          bsonType: "string",
+          maxLength: 255
+        },
+        created_at: {
+          bsonType: "date"
+        }
+      }
+    }
+  }
+})
+
+// create venues collection
+db.createCollection("venues", {
+  validator: {
+    $jsonSchema: {
+      bsonType: "object",
+      required: ["name", "location", "capacity", "morning_price", "afternoon_price", "evening_price"],
+      properties: {
+        name: {
+          bsonType: "string",
+          maxLength: 100
+        },
+        location: {
+          bsonType: "string",
+          maxLength: 200
+        },
+        capacity: {
+          bsonType: "int"
+        },
+        morning_price: {
+          bsonType: "double"
+        },
+        afternoon_price: {
+          bsonType: "double"
+        },
+        evening_price: {
+          bsonType: "double"
+        }
+      }
+    }
+  }
+})
+
+// create bookings collection
+db.createCollection("bookings", {
+  validator: {
+    $jsonSchema: {
+      bsonType: "object",
+      required: ["user_id", "venue_id", "artist_name", "concert_title", "date", "time_slot", "amount_expected", "receipt_id"],
+      properties: {
+        user_id: {
+          bsonType: "objectId"
+        },
+        venue_id: {
+          bsonType: "objectId"
+        },
+        artist_name: {
+          bsonType: "string",
+          maxLength: 100
+        },
+        concert_title: {
+          bsonType: "string",
+          maxLength: 100
+        },
+        date: {
+          bsonType: "date"
+        },
+        time_slot: {
+          bsonType: "string",
+          maxLength: 50
+        },
+        amount_expected: {
+          bsonType: "double"
+        },
+        status: {
+          bsonType: "string",
+          maxLength: 20
+        },
+        receipt_id: {
+          bsonType: "string",
+          maxLength: 20
+        }
+      }
+    }
+  }
+})
+
+// create transactions collection
+db.createCollection("transactions", {
+  validator: {
+    $jsonSchema: {
+      bsonType: "object",
+      required: ["booking_id", "payment_method", "amount_paid"],
+      properties: {
+        booking_id: {
+          bsonType: "objectId"
+        },
+        payment_method: {
+          bsonType: "string",
+          maxLength: 50
+        },
+        amount_paid: {
+          bsonType: "double"
+        },
+        payment_date: {
+          bsonType: "date"
+        }
+      }
+    }
+  }
+})
+
+// create indexes for unique fields
+db.users.createIndex({ username: 1 }, { unique: true })
+db.venues.createIndex({ name: 1 }, { unique: true })
+db.bookings.createIndex({ receipt_id: 1 }, { unique: true })
+
+// create indexes for relationships (foreign keys)
+db.bookings.createIndex({ user_id: 1 })
+db.bookings.createIndex({ venue_id: 1 })
+db.transactions.createIndex({ booking_id: 1 }, { unique: true })
+
+// insert sample documents for users collection
+db.users.insertMany([
+  {
+    agency_name: "Linguini Agency",
+    username: "fushi",
+    password: "immo",
+    created_at: new Date()
+  },
+  {
+    agency_name: "Gaudencio Agency",
+    username: "gugu",
+    password: "rean",
+    created_at: new Date()
+  }
+])
+
+// insert sample documents for venues collection
+db.venues.insertMany([
+  {
+    name: "Grand Arena",
+    location: "123 Main Street, Metro City",
+    capacity: 5000,
+    morning_price: 2500.00,
+    afternoon_price: 3500.00,
+    evening_price: 5000.00
+  },
+  {
+    name: "Royal Theater Hall",
+    location: "456 Broadway Ave, Downtown",
+    capacity: 3000,
+    morning_price: 1800.00,
+    afternoon_price: 2500.00,
+    evening_price: 3800.00
+  }
+])
+
+// insert sample documents for bookings collection. saka gawin after magawa ng mga user accounts tas gamitin ung objectid para sa keys.
+
+db.bookings.insertMany([
+  {
+    user_id: ObjectId(), // replace with actual user_id from users collection
+    venue_id: ObjectId(), // replace with actual venue_id from venues collection
+    artist_name: "The Rolling Beats",
+    concert_title: "Summer Rock Festival 2025",
+    date: new Date("2025-07-15"),
+    time_slot: "evening",
+    amount_expected: 5000.00,
+    status: "confirmed",
+    receipt_id: "RCP-2025-001"
+  },
+  {
+    user_id: ObjectId(), // replace with actual user_id from users collection
+    venue_id: ObjectId(), // replace with actual venue_id from venues collection
+    artist_name: "Jazz Harmony Quartet",
+    concert_title: "Night of Smooth Jazz",
+    date: new Date("2025-08-20"),
+    time_slot: "evening",
+    amount_expected: 3800.00,
+    status: "pending",
+    receipt_id: "RCP-2025-002"
+  }
+])
+
+// insert sample documents for transactions collection
+db.transactions.insertMany([
+  {
+    booking_id: ObjectId(), // replace with actual booking_id from bookings collection
+    payment_method: "Credit Card",
+    amount_paid: 5000.00,
+    payment_date: new Date()
+  },
+  {
+    booking_id: ObjectId(), // replace with actual booking_id from bookings collection
+    payment_method: "Bank Transfer",
+    amount_paid: 3800.00,
+    payment_date: new Date()
+  }
+])
