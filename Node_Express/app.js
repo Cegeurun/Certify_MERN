@@ -1,6 +1,6 @@
 import express from 'express';
 import routeManager from './routes/routeManager.js';
-// import {pool} from './model/loginModel.js';
+import {connectDB} from './model/loginModel.js';
 import path from 'path';
 import { __dirname } from './dirname.js';
 // import modelManager from './model/modelManager.js';
@@ -17,7 +17,7 @@ app.use('/userMedia', express.static(path.join(__dirname, 'userMedia')));
 console.log(__dirname);
 
 // Load Connection Pool
-// pool;
+connectDB;
 
 app.use(routeManager);
 // app.use(modelManager);
