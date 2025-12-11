@@ -34,7 +34,7 @@ const connectDB = async () => {
 };
 
 // Call connectDB when module loads
-connectDB();
+// connectDB();
 
 // Export db for use in other modules
 export { db, usersCollection, venuesCollection, bookingsCollection, transactionsCollection };
@@ -143,4 +143,3 @@ export async function getBookingsByUserId(userId) {
     const bookings = await bookingsCollection.find({ user_id: new mongodb.ObjectId(userId) }).toArray();
     return bookings;
 }
-
