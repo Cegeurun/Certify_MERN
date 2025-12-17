@@ -56,7 +56,7 @@ body {
     left: 0;
     height: 100vh !important;
     width: 100vw !important;
-    background-image: linear-gradient(rgba(0, 0, 0, 0.286), rgba(45, 38, 38, 0.7)), url("/static/css/images/arena.jpg") !important;
+    background-image: linear-gradient(rgba(0, 0, 0, 0.286), rgba(45, 38, 38, 0.7)), url("/media/arena.jpg") !important;
     background-position: center !important;
     background-size: cover !important;
     display: flex !important;

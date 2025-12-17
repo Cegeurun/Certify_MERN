@@ -1,4 +1,6 @@
 import express from 'express';
+import nunjucks from 'nunjucks';
+import session from 'express-session';
 import routeManager from './routes/routeManager.js';
 import {connectDB} from './model/loginModel.js';
 import path from 'path';
@@ -7,6 +9,81 @@ import { __dirname } from './dirname.js';
 // import controllerManager from './controller/controllerManager.js';
 
 const app = express();
+
+// Configure Nunjucks
+const nunjucksEnv = nunjucks.configure(path.join(__dirname, 'view', 'frontend'), {
+    autoescape: true,
+    express: app,
+    watch: true // Auto-reload templates when they change
+});
+
+// Add custom filters for Nunjucks
+nunjucksEnv.addFilter('replace', function(str, find, replace) {
+    return str.replace(new RegExp(find, 'g'), replace);
+});
+
+// Add number formatting filter (replaces Python's format)
+nunjucksEnv.addFilter('formatNumber', function(num) {
+    if (num === undefined || num === null) return '0.00';
+    return Number(num).toLocaleString('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    });
+});
+
+// Add url_for function (Flask-like routing)
+nunjucksEnv.addGlobal('url_for', function(route, options = {}) {
+    // Map Flask route names to Express routes
+    const routes = {
+        'static': (filename) => {
+            if (filename.startsWith('css/')) return '/' + filename;
+            if (filename.startsWith('js/')) return '/' + filename;
+            if (filename.startsWith('images/')) return '/media/' + filename.replace('images/', '');
+            if (filename.startsWith('media/')) return '/' + filename;
+            return '/' + filename;
+        },
+        'home': () => '/',
+        'dashboard': () => '/dashboard',
+        'login': () => '/login',
+        'signup': () => '/signup',
+        'logout': () => '/logout',
+        'profile': () => '/profile',
+        'venues': () => '/venues',
+        'view_receipt': (booking_id) => `/receipt/${booking_id || options.booking_id}`,
+        'cancel_booking': (booking_id) => `/cancel/${booking_id || options.booking_id}`,
+        'book': () => '/book'
+    };
+    
+    if (route === 'static' && options.filename) {
+        return routes.static(options.filename);
+    }
+    
+    return routes[route] ? routes[route](options.booking_id) : '#';
+});
+
+// Middleware for parsing request bodies
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// Session middleware (for user authentication)
+app.use(session({
+    secret: 'your-secret-key-change-this',
+    resave: false,
+    saveUninitialized: false,
+    cookie: { secure: false } // Set to true if using HTTPS
+}));
+
+// Middleware to pass user data to all templates
+app.use((req, res, next) => {
+    res.locals.current_user = req.session.user || { is_authenticated: false };
+    res.locals.request = req;
+    
+    // Flash messages support (simple implementation)
+    res.locals.flash_messages = req.session.flash_messages || [];
+    req.session.flash_messages = []; // Clear flash messages after reading
+    
+    next();
+});
 
 // Load folders
 app.use('/css',  express.static(path.join(__dirname, 'view', 'frontend', 'public', 'css')));

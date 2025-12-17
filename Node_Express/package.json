@@ -10,12 +10,15 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "cookie-parser": "^1.4.7",
     "dotenv": "^17.2.1",
     "express": "^5.1.0",
+    "express-session": "^1.18.2",
     "jsonwebtoken": "^9.0.2",
     "mongodb": "^7.0.0",
     "multer": "^2.0.2",
     "mysql2": "^3.14.3",
-    "nodemon": "^3.1.10"
+    "nodemon": "^3.1.10",
+    "nunjucks": "^3.2.4"
   }
 }

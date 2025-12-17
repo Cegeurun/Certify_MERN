@@ -6,7 +6,14 @@ const route = express.Router();
 
 // Profile page route
 route.get('/profile', (req, res) => {
-    res.sendFile(path.join(__dirname, '/view/frontend/profile.html'));
+    res.render('profile.html', {
+        user: req.session.user || {
+            username: 'Guest',
+            email: 'guest@example.com',
+            agency_name: 'Demo Agency',
+            contact_number: 'N/A'
+        }
+    });
 });
 
 export default route;
