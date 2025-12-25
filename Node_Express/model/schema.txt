@@ -73,7 +73,7 @@ db.createCollection("bookings", {
   validator: {
     $jsonSchema: {
       bsonType: "object",
-      required: ["user_id", "venue_id", "artist_name", "concert_title", "date", "time_slot", "amount_expected", "receipt_id"],
+      required: ["user_id", "venue_id", "artist_name", "concert_title", "date", "time_slot", "amount_expected", "status", "receipt_id"],
       properties: {
         user_id: {
           bsonType: "objectId"

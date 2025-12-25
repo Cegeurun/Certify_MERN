@@ -64,10 +64,9 @@ export async function verifyLogin(user_username, user_password)
     console.log(`Selection ${selection}`);
     if(!selection) { return false; }
     
-    // const hashedPassword = hashPassword(user_password);
+    const hashedPassword = hashPassword(user_password);
     
-    // const isValid = (selection.password === hashedPassword);
-    const isValid = (true);
+    const isValid = (selection.password === hashedPassword);
     return ({
       success: isValid,
       id: selection._id.toString(),
@@ -124,6 +123,10 @@ export async function createUser(agency_name, user_username, user_password)
 // Create Booking
 export async function createBooking(userId, venueId, artistName, concertTitle, date, timeSlot, amountExpected, receiptId)
 {
+
+    receiptId = `A${Math.random()}`;
+    amountExpected = 10000.01;
+
     const newBooking = {
         user_id: new mongodb.ObjectId(userId),
         venue_id: new mongodb.ObjectId(venueId),
@@ -135,6 +138,8 @@ export async function createBooking(userId, venueId, artistName, concertTitle, d
         status: 'pending',
         receipt_id: receiptId
     };
+
+    console.log(newBooking);
     
     const result = await bookingsCollection.insertOne(newBooking);
     return result;
@@ -142,8 +147,16 @@ export async function createBooking(userId, venueId, artistName, concertTitle, d
 
 // Get Bookings by User ID
 export async function getBookingsByUserId(userId) {
+    console.log(`Code is running...`)
+    console.log(`userId: ${userId}`)
     const bookings = await bookingsCollection.find({ user_id: new mongodb.ObjectId(userId) }).toArray();
+
+    console.log(`ObjectID: ${mongodb.ObjectId(userId)}`);
     return bookings;
+}
+
+export async function getBookingsByObjectId(userId) {
+    return await bookingsCollection.find({ user_id: new ObjectId(userId) }).toArray();
 }
 
 export {connectDB};

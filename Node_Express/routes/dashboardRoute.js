@@ -1,6 +1,7 @@
 import express from 'express';
 import path from 'path';
 import { __dirname } from '../dirname.js';
+import * as loginModel from '../model/loginModel.js';
 
 const route = express.Router();
 
@@ -16,7 +17,11 @@ const sampleBookings = [];
 
 route.get('/dashboard', (req, res) => {
     const today = new Date().toISOString().split('T')[0];
-    
+
+    console.log(`SessionId: ${req.session.userId}`);
+    // sampleBookings = loginModel.getBookingsByUserId(req.session.userId);
+    // sampleBookings = [];
+    console.log();
     res.render('dashboard.html', {
         username: req.session.user?.username || 'Guest',
         agency_name: req.session.user?.agency_name || 'Demo Agency',
@@ -25,5 +30,11 @@ route.get('/dashboard', (req, res) => {
         today: today
     });
 });
+
+route.post("/book",async (req, res) => {
+        console.log(await loginModel.createBooking(req.body.user_id, req.body.venue_id, req.body.artist_name, req.body.concert_title, req.body.date, req.body.time_slot, req.body.amount_expected, req.body.status, req.body.receipt_id));
+        
+        res.redirect('/dashboard');
+})
 
 export default route;

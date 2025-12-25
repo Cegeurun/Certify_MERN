@@ -48,8 +48,8 @@ route.post('/signup',async (req,res) => {
   console.log(req.body.username);
     console.log(req.body.password);
 
-    console.log(await loginModel.createUser(req.body.username, req.body.password, req.body.email));
-    
+    console.log(await loginModel.createUser(req.body.agency_name ,req.body.username, req.body.password));
+
     res.redirect('/login');
 });
 
