@@ -1,6 +1,8 @@
 import express from 'express';
 import path from 'path';
 import { __dirname } from '../dirname.js';
+import * as loginModel from '../model/loginModel.js';
+
 
 const route = express.Router();
 
@@ -53,22 +55,28 @@ const sampleEvents = [
 ];
 
 // Home page route
-route.get('/', (req, res) => {
+route.get('/',async (req, res) => {
     const today = new Date().toISOString().split('T')[0];
-    
+    const bookings = await loginModel.getBookingsByObjectId(req.session.user?.id);
+
     res.render('home.html', {
         venues: sampleVenues,
         events: sampleEvents,
+        bookings: bookings,
+        agency_name: req.session.user?.agency_name,
         today: today
     });
 });
 
-route.get('/home', (req, res) => {
+route.get('/home', async (req, res) => {
     const today = new Date().toISOString().split('T')[0];
-    
+    const bookings = await loginModel.getBookingsByObjectId(req.session.user?.id);
+
     res.render('home.html', {
         venues: sampleVenues,
         events: sampleEvents,
+        bookings: bookings,
+        agency_name: req.session.user?.agency_name,
         today: today
     });
 });

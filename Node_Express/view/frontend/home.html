@@ -48,7 +48,7 @@
 
 <!-- ✅ Events Section -->
 <div class="ms-3 me-3 pt-3">
-    <h2 class="text-center fw-bold mb-4">Upcoming Events</h2>
+    <h2 class="text-center fw-bold mb-4">Your Events</h2>
 
     <!-- ✅ Sorting Dropdown -->
     <div class="mb-4 text-center">
@@ -76,12 +76,13 @@
                 </tr>
             </thead>
             <tbody id="events-table">
-                {% for event in events %}
-                <tr {% if event.date < today and request.query.sort != 'all' %}style="display: none;"{% endif %}>
-                    <td>{{ event.venue.name }}</td>
+                {% for event in bookings %}
+                <!-- <tr {% if event.date < today and request.query.sort != 'all' %}style="display: none;"{% endif %}> -->
+                <tr>
+                    <td>{{ event.venue_name }}</td>
                     <td>{{ event.concert_title }}</td>
                     <td>{{ event.artist_name }}</td>
-                    <td>{{ event.user.agency_name }}</td>
+                    <td>{{ agency_name }}</td>
                     <td>{{ event.date }}</td>
                     <td>{{ event.time_slot }}</td>
                 </tr>
