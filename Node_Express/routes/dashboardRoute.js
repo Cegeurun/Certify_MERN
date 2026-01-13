@@ -13,12 +13,12 @@ const sampleVenues = [
 ];
 
 // Sample bookings data
-const sampleBookings = [];
+// const bookings = await loginModel.getBookingsByObjectId(req.session.user?.id);
 
-route.get('/dashboard', (req, res) => {
+route.get('/dashboard', async (req, res) => {
     const today = new Date().toISOString().split('T')[0];
-
-    console.log(`SessionId: ${req.session.userId}`);
+    const bookings = await loginModel.getBookingsByObjectId(req.session.user?.id);
+    console.log(`SessionId: ${req.session.user?.id}`);
     // sampleBookings = loginModel.getBookingsByUserId(req.session.userId);
     // sampleBookings = [];
     console.log();
@@ -26,13 +26,14 @@ route.get('/dashboard', (req, res) => {
         username: req.session.user?.username || 'Guest',
         agency_name: req.session.user?.agency_name || 'Demo Agency',
         venues: sampleVenues,
-        bookings: sampleBookings,
+        bookings: bookings,
         today: today
     });
 });
 
-route.post("/book",async (req, res) => {
-        console.log(await loginModel.createBooking(req.body.user_id, req.body.venue_id, req.body.artist_name, req.body.concert_title, req.body.date, req.body.time_slot, req.body.amount_expected, req.body.status, req.body.receipt_id));
+route.post("/book", async (req, res) => {
+        console.log(`Venue: ${req.body.venue}`)
+        console.log(await loginModel.createBooking(req.session.user?.id, req.body.venue, req.body.artist_name, req.body.concert_title, req.body.date, req.body.time_slot, req.body.amount_expected, req.body.status, req.body.receipt_id));
         
         res.redirect('/dashboard');
 })

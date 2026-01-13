@@ -121,7 +121,7 @@ export async function createUser(agency_name, user_username, user_password)
 }
 
 // Create Booking
-export async function createBooking(userId, venueId, artistName, concertTitle, date, timeSlot, amountExpected, receiptId)
+export async function createBooking(userId, venue, artistName, concertTitle, date, timeSlot, amountExpected, receiptId)
 {
 
     receiptId = `A${Math.random()}`;
@@ -129,13 +129,14 @@ export async function createBooking(userId, venueId, artistName, concertTitle, d
 
     const newBooking = {
         user_id: new mongodb.ObjectId(userId),
-        venue_id: new mongodb.ObjectId(venueId),
+        // venue_id: new mongodb.ObjectId(venueId),
+        venue_name: venue,
         artist_name: artistName,
         concert_title: concertTitle,
         date: new Date(date),
         time_slot: timeSlot,
         amount_expected: amountExpected,
-        status: 'pending',
+        status: 'Paid',
         receipt_id: receiptId
     };
 
@@ -156,7 +157,7 @@ export async function getBookingsByUserId(userId) {
 }
 
 export async function getBookingsByObjectId(userId) {
-    return await bookingsCollection.find({ user_id: new ObjectId(userId) }).toArray();
+    return await bookingsCollection.find({ user_id: new mongodb.ObjectId(userId) }).toArray();
 }
 
 export {connectDB};

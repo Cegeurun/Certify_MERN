@@ -73,7 +73,7 @@
                                 {% for booking in bookings %}
                                     <tr class="border-bottom">
                                         <td class="fw-bold">{{ booking.receipt_id }}</td>
-                                        <td>{{ booking.venue.name }}</td>
+                                        <td>{{ booking.venue_name }}</td>
                                         <td>{{ booking.artist_name }}</td>
                                         <td>{{ booking.date }}</td>
                                         <td>{{ booking.time_slot }}</td>
@@ -90,7 +90,7 @@
                                                     <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">Cancel</button>
                                                 </form>
                                             {% else %}
-                                                <span class="text-muted">Cancelled</span>
+                                                <!-- <span class="text-muted">Cancelled</span> -->
                                             {% endif %}
                                         </td>
                                     </tr>

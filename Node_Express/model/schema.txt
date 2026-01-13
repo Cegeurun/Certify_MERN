@@ -73,13 +73,14 @@ db.createCollection("bookings", {
   validator: {
     $jsonSchema: {
       bsonType: "object",
-      required: ["user_id", "venue_id", "artist_name", "concert_title", "date", "time_slot", "amount_expected", "status", "receipt_id"],
+      required: ["user_id", "venue_name", "artist_name", "concert_title", "date", "time_slot", "amount_expected", "status", "receipt_id"],
       properties: {
         user_id: {
           bsonType: "objectId"
         },
-        venue_id: {
-          bsonType: "objectId"
+        venue_name: {
+          bsonType: "string",
+          maxLength: 100
         },
         artist_name: {
           bsonType: "string",
@@ -144,7 +145,7 @@ db.bookings.createIndex({ receipt_id: 1 }, { unique: true })
 
 // create indexes for relationships (foreign keys)
 db.bookings.createIndex({ user_id: 1 })
-db.bookings.createIndex({ venue_id: 1 })
+db.bookings.createIndex({ venue_name: 1 })
 db.transactions.createIndex({ booking_id: 1 }, { unique: true })
 
 // insert sample documents for users collection
@@ -188,24 +189,24 @@ db.venues.insertMany([
 db.bookings.insertMany([
   {
     user_id: ObjectId(), // replace with actual user_id from users collection
-    venue_id: ObjectId(), // replace with actual venue_id from venues collection
+    venue_name: "yah", // replace with actual venue_id from venues collection
     artist_name: "The Rolling Beats",
     concert_title: "Summer Rock Festival 2025",
     date: new Date("2025-07-15"),
     time_slot: "evening",
     amount_expected: 5000.00,
-    status: "confirmed",
+    status: "Paid",
     receipt_id: "RCP-2025-001"
   },
   {
     user_id: ObjectId(), // replace with actual user_id from users collection
-    venue_id: ObjectId(), // replace with actual venue_id from venues collection
+    venue_name: "yah", // replace with actual venue_id from venues collection
     artist_name: "Jazz Harmony Quartet",
     concert_title: "Night of Smooth Jazz",
     date: new Date("2025-08-20"),
     time_slot: "evening",
     amount_expected: 3800.00,
-    status: "pending",
+    status: "Paid",
     receipt_id: "RCP-2025-002"
   }
 ])
