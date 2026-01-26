@@ -160,4 +160,30 @@ export async function getBookingsByObjectId(userId) {
     return await bookingsCollection.find({ user_id: new mongodb.ObjectId(userId) }).toArray();
 }
 
+// Delete booking by Object Id
+
+export async function updateUsernameByUserId(userId, newUsername) {
+    const result = await usersCollection.updateOne(
+        { _id: new mongodb.ObjectId(userId) },
+        { $set: { username: newUsername } }
+    );
+    return result;
+}
+
+export async function updatePasswordByUserId(userId, newPassword) {
+    const result = await usersCollection.updateOne(
+        { _id: new mongodb.ObjectId(userId) },
+        { $set: { password: hashPassword(newPassword) } }
+    );
+    return result;
+}
+
+export async function removeBookingByObjectId(bookingId) {
+    const result = await bookingsCollection.deleteOne(
+        { _id: new mongodb.ObjectId(bookingId) }
+    );
+    return result;
+}
+
+
 export {connectDB};

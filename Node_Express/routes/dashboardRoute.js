@@ -31,11 +31,20 @@ route.get('/dashboard', async (req, res) => {
     });
 });
 
+
+route.post("/cancel/:bookingId", async (req, res) => {
+    console.log(`Bookingid: ${req.params.bookingId}`)
+        await loginModel.removeBookingByObjectId(req.params.bookingId);
+        res.redirect('/dashboard');
+})
+
 route.post("/book", async (req, res) => {
         console.log(`Venue: ${req.body.venue}`)
         console.log(await loginModel.createBooking(req.session.user?.id, req.body.venue, req.body.artist_name, req.body.concert_title, req.body.date, req.body.time_slot, req.body.amount_expected, req.body.status, req.body.receipt_id));
         
         res.redirect('/dashboard');
 })
+
+// `/cancel/${booking_id || options.booking_id}`
 
 export default route;

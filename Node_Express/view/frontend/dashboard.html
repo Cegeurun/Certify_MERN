@@ -40,14 +40,14 @@
         </div>
 
         <!-- Sorting Dropdown -->
-        <div class="mb-4">
+        <!-- <div class="mb-4">
             <label for="sort" class="fw-bold">Sort by:</label>
             <select id="sort" class="form-select w-auto d-inline-block" onchange="sortDashboard()">
                 <option value="date" {% if not request.query.sort or request.query.sort == 'date' %}selected{% endif %}>Date</option>
                 <option value="artist" {% if request.query.sort == 'artist' %}selected{% endif %}>Artist Name</option>
                 <option value="venue" {% if request.query.sort == 'venue' %}selected{% endif %}>Venue</option>
             </select>
-        </div>
+        </div> -->
 
         <!-- Booking and Calendar Layout -->
         <div class="row">
@@ -59,7 +59,7 @@
                         <table class="table align-middle text-center">
                             <thead class="bg-primary text-white">
                                 <tr>
-                                    <th>Receipt ID</th>
+                                    <!-- <th>Receipt ID</th> -->
                                     <th>Venue</th>
                                     <th>Artist</th>
                                     <th>Date</th>
@@ -72,7 +72,7 @@
                             <tbody class="bg-light">
                                 {% for booking in bookings %}
                                     <tr class="border-bottom">
-                                        <td class="fw-bold">{{ booking.receipt_id }}</td>
+                                        <!-- <td class="fw-bold">{{ booking.receipt_id }}</td> -->
                                         <td>{{ booking.venue_name }}</td>
                                         <td>{{ booking.artist_name }}</td>
                                         <td>{{ booking.date }}</td>
@@ -84,9 +84,9 @@
                                             </span>
                                         </td>
                                         <td class="d-flex gap-2">
-                                            <a href="{{ url_for('view_receipt', booking_id=booking.id) }}" class="btn btn-info btn-sm">View Receipt</a>
+                                            <!-- <a href="{{ url_for('view_receipt', booking_id=booking._id) }}" class="btn btn-info btn-sm">View Receipt</a> -->
                                             {% if booking.status == "Paid" %}
-                                                <form method="POST" action="{{ url_for('cancel_booking', booking_id=booking.id) }}">
+                                                <form method="POST" action="/cancel/{{booking._id}}">
                                                     <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">Cancel</button>
                                                 </form>
                                             {% else %}
