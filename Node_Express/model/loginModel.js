@@ -125,8 +125,19 @@ export async function createBooking(userId, venue, artistName, concertTitle, dat
 {
 
     receiptId = `A${Math.random()}`;
-    amountExpected = 10000.01;
-
+    console.log(`Here is the venue boh ${venue}`);
+    
+    const venueData = await getVenuesByName(venue);
+    
+    if (timeSlot === 'Morning') {
+        amountExpected = venueData.morning_price;
+    } else if (timeSlot === 'Afternoon') {
+        amountExpected = venueData.afternoon_price;
+    } else if (timeSlot === 'Evening') {
+        amountExpected = venueData.evening_price;
+    }
+    
+    console.log(`Amount Expected: ${amountExpected}`);
     const newBooking = {
         user_id: new mongodb.ObjectId(userId),
         // venue_id: new mongodb.ObjectId(venueId),
@@ -158,6 +169,10 @@ export async function getBookingsByUserId(userId) {
 
 export async function getBookingsByObjectId(userId) {
     return await bookingsCollection.find({ user_id: new mongodb.ObjectId(userId) }).toArray();
+}
+
+export async function getVenuesByName(venueName) {
+    return await venuesCollection.findOne({ name: venueName });
 }
 
 // Delete booking by Object Id

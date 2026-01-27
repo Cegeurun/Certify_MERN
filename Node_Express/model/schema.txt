@@ -55,13 +55,13 @@ db.createCollection("venues", {
           bsonType: "int"
         },
         morning_price: {
-          bsonType: "double"
+          bsonType: "int"
         },
         afternoon_price: {
-          bsonType: "double"
+          bsonType: "int"
         },
         evening_price: {
-          bsonType: "double"
+          bsonType: "int"
         }
       }
     }
@@ -98,7 +98,7 @@ db.createCollection("bookings", {
           maxLength: 50
         },
         amount_expected: {
-          bsonType: "double"
+          bsonType: "int"
         },
         status: {
           bsonType: "string",
@@ -167,20 +167,28 @@ db.users.insertMany([
 // insert sample documents for venues collection
 db.venues.insertMany([
   {
-    name: "Grand Arena",
+    name: "Philippine Arena",
     location: "123 Main Street, Metro City",
     capacity: 5000,
-    morning_price: 2500.00,
-    afternoon_price: 3500.00,
-    evening_price: 5000.00
+    morning_price: 2500,
+    afternoon_price: 3500,
+    evening_price: 5000
   },
   {
-    name: "Royal Theater Hall",
+    name: "MOA Arena",
     location: "456 Broadway Ave, Downtown",
     capacity: 3000,
-    morning_price: 1800.00,
-    afternoon_price: 2500.00,
-    evening_price: 3800.00
+    morning_price: 1800,
+    afternoon_price: 2500,
+    evening_price: 3800
+  },
+    {
+    name: "Araneta Coliseum",
+    location: "456 Broadway Ave, Downtown",
+    capacity: 3000,
+    morning_price: 1800,
+    afternoon_price: 2500,
+    evening_price: 3800
   }
 ])
 
