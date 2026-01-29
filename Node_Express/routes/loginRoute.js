@@ -29,12 +29,19 @@ route.post('/login', async (req,res) => {
             id: user.id,
             username: user.username,
             agency_name: user.agency_name,
+            isAdmin: user.isAdmin,
             is_authenticated: true,
             findUser: 'Guest'
         };
         
         console.log('User logged in:', user.username);
-        res.redirect('/dashboard');
+        
+        // Redirect based on admin status
+        if (user.isAdmin === true) {
+            res.redirect('/admin');
+        } else {
+            res.redirect('/dashboard');
+        }
     }
     else
     {

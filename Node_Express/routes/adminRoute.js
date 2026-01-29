@@ -5,6 +5,24 @@ import * as loginModel from '../model/loginModel.js';
 
 const route = express.Router();
 
+// Middleware to check if user is admin
+function checkAdmin(req, res, next) {
+    if (!req.session.user) {
+        return res.redirect('/login');
+    }
+    
+    if (req.session.user.isAdmin !== true) {
+        return res.status(403).render('accessDenied.html', {
+            username: req.session.user.username
+        });
+    }
+    
+    next();
+}
+
+// Apply admin middleware to all admin routes
+route.use(checkAdmin);
+
 // Admin page route
 route.get('/admin', async (req, res) => {
     // Basic admin page with placeholder functionality

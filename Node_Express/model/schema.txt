@@ -1,3 +1,5 @@
+// This first
+use concert_booking_db
 
 // then paste the rest of the code
 db.users.drop()
@@ -10,7 +12,7 @@ db.createCollection("users", {
   validator: {
     $jsonSchema: {
       bsonType: "object",
-      required: ["agency_name", "username", "password"],
+      required: ["agency_name", "username", "password", "isAdmin"],
       properties: {
         agency_name: {
           bsonType: "string",
@@ -23,6 +25,9 @@ db.createCollection("users", {
         password: {
           bsonType: "string",
           maxLength: 255
+        },
+        isAdmin: {
+          bsonType: "bool"
         },
         created_at: {
           bsonType: "date"
@@ -145,17 +150,31 @@ db.bookings.createIndex({ venue_name: 1 })
 db.transactions.createIndex({ booking_id: 1 }, { unique: true })
 
 // insert sample documents for users collection
+// Password is admin
 db.users.insertMany([
+  {
+    agency_name: "Admin Agency",
+    username: "admin",
+    password: "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918",
+    isAdmin: true,
+    created_at: new Date()
+  },
+
+  // Password is immo
   {
     agency_name: "Linguini Agency",
     username: "fushi",
-    password: "immo",
+    password: "844860fcc417d90e108e479c921ff0825f2d4fd82a3623d77b929e6b9d9a16d9",
+    isAdmin: false,
     created_at: new Date()
   },
+  
+  // Password is rean
   {
     agency_name: "Gaudencio Agency",
     username: "gugu",
-    password: "rean",
+    password: "76fedfbf430151b4de837a699bbbf84834d8ce8c2ecd18830a2bc02d02b75f26",
+    isAdmin: false,
     created_at: new Date()
   }
 ])
@@ -165,26 +184,26 @@ db.venues.insertMany([
   {
     name: "Philippine Arena",
     location: "123 Main Street, Metro City",
-    capacity: 5000,
-    morning_price: 2500,
-    afternoon_price: 3500,
-    evening_price: 5000
+    capacity: 55000,
+    morning_price: 1400000,
+    afternoon_price: 1500000,
+    evening_price: 1600000
   },
   {
     name: "MOA Arena",
     location: "456 Broadway Ave, Downtown",
-    capacity: 3000,
-    morning_price: 1800,
-    afternoon_price: 2500,
-    evening_price: 3800
+    capacity: 20000,
+    morning_price: 1000000,
+    afternoon_price: 1100000,
+    evening_price: 1200000
   },
     {
     name: "Araneta Coliseum",
     location: "456 Broadway Ave, Downtown",
-    capacity: 3000,
-    morning_price: 1800,
-    afternoon_price: 2500,
-    evening_price: 3800
+    capacity: 16500,
+    morning_price: 500000,
+    afternoon_price: 600000,
+    evening_price: 700000
   }
 ])
 
@@ -200,7 +219,7 @@ db.bookings.insertMany([
     time_slot: "evening",
     amount_expected: 5000.00,
     status: "Paid",
-    receipt_id: "RCP-2025-001"
+    receipt_id: "A0.12312321312312321"
   },
   {
     user_id: ObjectId(), // replace with actual user_id from users collection
@@ -211,7 +230,7 @@ db.bookings.insertMany([
     time_slot: "evening",
     amount_expected: 3800.00,
     status: "Paid",
-    receipt_id: "RCP-2025-002"
+    receipt_id: "A0.123091910249032"
   }
 ])
 

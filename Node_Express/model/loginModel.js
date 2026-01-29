@@ -71,7 +71,8 @@ export async function verifyLogin(user_username, user_password)
       success: isValid,
       id: selection._id.toString(),
       username: selection.username,
-      agency_name: selection.agency_name
+      agency_name: selection.agency_name,
+      isAdmin: selection.isAdmin || false
     });
 }
 
@@ -113,6 +114,7 @@ export async function createUser(agency_name, user_username, user_password)
         agency_name: agency_name,
         username: user_username,
         password: hashedPassword,
+        isAdmin: false,
         created_at: new Date()
     };
     
