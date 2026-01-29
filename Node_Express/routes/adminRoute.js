@@ -50,4 +50,52 @@ route.post('/admin/find-user', async (req, res) => {
     res.redirect('/admin/find');
 });
 
+// Manage Venues page
+route.get('/admin/venues', async (req, res) => {
+    const venues = await loginModel.getAllVenues();
+    res.render('adminVenues.html', {
+        username: req.session.user?.username || 'Admin',
+        venues: venues
+    });
+});
+
+// Update venue field endpoint
+route.post('/admin/update-venue', async (req, res) => {
+    const { venueId, fieldName, fieldValue } = req.body;
+    await loginModel.updateVenueField(venueId, fieldName, fieldValue);
+    res.json({ success: true });
+});
+
+// View All Bookings page
+route.get('/admin/bookings', async (req, res) => {
+    const bookings = await loginModel.getAllBookings();
+    res.render('adminBookings.html', {
+        username: req.session.user?.username || 'Admin',
+        bookings: bookings
+    });
+});
+
+// User Management page
+route.get('/admin/users', async (req, res) => {
+    const users = await loginModel.getAllUsers();
+    res.render('adminUsers.html', {
+        username: req.session.user?.username || 'Admin',
+        users: users
+    });
+});
+
+// Delete user endpoint
+route.post('/admin/delete-user/:userId', async (req, res) => {
+    await loginModel.deleteUserById(req.params.userId);
+    res.redirect('/admin/users');
+});
+
+// System Settings page
+route.get('/admin/settings', async (req, res) => {
+    res.render('adminSettings.html', {
+        username: req.session.user?.username || 'Admin',
+        nodeVersion: process.version
+    });
+});
+
 export default route;

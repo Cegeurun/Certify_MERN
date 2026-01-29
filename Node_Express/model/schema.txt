@@ -1,8 +1,4 @@
 
-// do this first
-use concert_booking_db
-
-
 // then paste the rest of the code
 db.users.drop()
 db.venues.drop()
@@ -224,13 +220,13 @@ db.transactions.insertMany([
   {
     booking_id: ObjectId(), // replace with actual booking_id from bookings collection
     payment_method: "Credit Card",
-    amount_paid: 5000.00,
+    amount_paid: Double(5000.00),
     payment_date: new Date()
   },
   {
     booking_id: ObjectId(), // replace with actual booking_id from bookings collection
     payment_method: "Bank Transfer",
-    amount_paid: 3800.00,
+    amount_paid: Double(3800.00),
     payment_date: new Date()
   }
 ])

@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block title %}System Settings - Admin{% endblock %}
+
+{% block content %}
+
+<div class="container mt-5">
+    <div class="ms-3 me-3 mb-5">
+        <div class="d-flex justify-content-between align-items-center mb-5">
+            <h2>System Settings</h2>
+            <div class="text-muted">Logged in as: {{ username }}</div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header">
+                <h4>Database Information</h4>
+            </div>
+            <div class="card-body">
+                <p><strong>Database Name:</strong> concert_booking_db</p>
+                <p><strong>Status:</strong> <span class="badge bg-success">Connected</span></p>
+                <p class="text-muted">System is running normally.</p>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header">
+                <h4>Quick Actions</h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <a href="/admin" class="btn btn-primary w-100">Back to Admin Dashboard</a>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <a href="/dashboard" class="btn btn-info w-100">Go to User Dashboard</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h4>System Information</h4>
+            </div>
+            <div class="card-body">
+                <p><strong>Application:</strong> Concert Booking System</p>
+                <p><strong>Version:</strong> 1.0.0</p>
+                <p><strong>Node Version:</strong> {{ nodeVersion }}</p>
+                <p class="text-muted mt-3">For advanced settings, please contact the system administrator.</p>
+            </div>
+        </div>
+        <br>
+        <button type="button" class="btn btn-primary" onclick="history.back()">Go Back</button>
+    </div>
+</div>
+
+{% endblock %}

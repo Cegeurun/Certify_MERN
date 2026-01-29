@@ -1,6 +1,7 @@
 import express from 'express';
 import path from 'path';
 import { __dirname } from '../dirname.js';
+import * as loginModel from '../model/loginModel.js';
 
 const route = express.Router();
 
@@ -33,15 +34,17 @@ const sampleVenues = [
 ];
 
 // Venue page route
-route.get('/venue', (req, res) => {
+route.get('/venue', async (req, res) => {
+    const venues = await loginModel.getAllVenues();
     res.render('venue.html', {
-        venues: sampleVenues
+        venues: venues
     });
 });
 
-route.get('/venues', (req, res) => {
+route.get('/venues', async (req, res) => {
+    const venues = await loginModel.getAllVenues();
     res.render('venue.html', {
-        venues: sampleVenues
+        venues: venues
     });
 });
 

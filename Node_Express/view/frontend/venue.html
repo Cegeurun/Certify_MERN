@@ -21,9 +21,13 @@
 
                 <h4 class="venue-subtitle ms-4">Pricing:</h4>
                 <ul class="venue-list ms-4">
-                    <li>Morning: ₱500,000.00</li>
-                    <li>Afternoon: ₱700,000.00</li>
-                    <li>Evening: ₱1,200,000.00</li>
+                    {% for venue in venues %}
+                        {% if venue.name == 'MOA Arena' %}
+                            <li>Morning: ₱{{ venue.morning_price | formatNumber }}</li>
+                            <li>Afternoon: ₱{{ venue.afternoon_price | formatNumber }}</li>
+                            <li>Evening: ₱{{ venue.evening_price | formatNumber }}</li>
+                        {% endif %}
+                    {% endfor %}
                 </ul>
 
                 <p class="venue-location text-dark ms-4">Location: SM Mall of Asia, Pasay, Metro Manila</p>
@@ -54,9 +58,13 @@
 
                 <h4 class="venue-subtitle">Pricing:</h4>
                 <ul class="venue-list">
-                    <li>Morning: ₱800,000.00</li>
-                    <li>Afternoon: ₱1,000,000.00</li>
-                    <li>Evening: ₱1,800,000.00</li>
+                    {% for venue in venues %}
+                        {% if venue.name == 'Philippine Arena' %}
+                            <li>Morning: ₱{{ venue.morning_price | formatNumber }}</li>
+                            <li>Afternoon: ₱{{ venue.afternoon_price | formatNumber }}</li>
+                            <li>Evening: ₱{{ venue.evening_price | formatNumber }}</li>
+                        {% endif %}
+                    {% endfor %}
                 </ul>
 
                 <p class="venue-location text-dark">Location: Bocaue, Bulacan</p>
@@ -87,9 +95,13 @@
 
                 <h4 class="venue-subtitle ms-4">Pricing:</h4>
                 <ul class="venue-list ms-4">
-                    <li>Morning: ₱400,000.00</li>
-                    <li>Afternoon: ₱600,000.00</li>
-                    <li>Evening: ₱1,000,000.00</li>
+                    {% for venue in venues %}
+                        {% if venue.name == 'Araneta Coliseum' %}
+                            <li>Morning: ₱{{ venue.morning_price | formatNumber }}</li>
+                            <li>Afternoon: ₱{{ venue.afternoon_price | formatNumber }}</li>
+                            <li>Evening: ₱{{ venue.evening_price | formatNumber }}</li>
+                        {% endif %}
+                    {% endfor %}
                 </ul>
 
                 <p class="venue-location ms-4 text-dark">Location: Cubao, Quezon City</p>

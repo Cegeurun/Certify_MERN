@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block title %}All Bookings - Admin{% endblock %}
+
+{% block content %}
+
+<div class="container mt-5">
+    <div class="ms-3 me-3 mb-5">
+        <div class="d-flex justify-content-between align-items-center mb-5">
+            <h2>All Bookings</h2>
+            <div class="text-muted">Logged in as: {{ username }}</div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h4>System-Wide Bookings</h4>
+            </div>
+            <div class="card-body">
+                {% if bookings %}
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead class="bg-primary text-white">
+                                <tr>
+                                    <th>Receipt ID</th>
+                                    <th>Venue</th>
+                                    <th>Artist</th>
+                                    <th>Concert Title</th>
+                                    <th>Date</th>
+                                    <th>Time Slot</th>
+                                    <th>Amount</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for booking in bookings %}
+                                    <tr>
+                                        <td class="fw-bold">{{ booking.receipt_id }}</td>
+                                        <td>{{ booking.venue_name }}</td>
+                                        <td>{{ booking.artist_name }}</td>
+                                        <td>{{ booking.concert_title }}</td>
+                                        <td>{{ booking.date }}</td>
+                                        <td>{{ booking.time_slot }}</td>
+                                        <td class="text-success">₱{{ booking.amount_expected | formatNumber }}</td>
+                                        <td>
+                                            <span class="badge {% if booking.status == 'Paid' %}bg-success{% else %}bg-danger{% endif %} p-2">
+                                                {{ booking.status }}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <p class="text-center text-muted">No bookings found.</p>
+                {% endif %}
+            </div>
+        </div>
+        <br>
+        <button type="button" class="btn btn-primary" onclick="history.back()">Go Back</button>
+    </div>
+</div>
+
+{% endblock %}

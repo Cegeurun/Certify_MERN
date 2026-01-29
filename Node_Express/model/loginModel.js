@@ -220,5 +220,36 @@ export async function removeBookingByObjectId(bookingId) {
     return result;
 }
 
+// Admin functions
+export async function getAllUsers() {
+    return await usersCollection.find({}).toArray();
+}
+
+export async function getAllBookings() {
+    return await bookingsCollection.find({}).toArray();
+}
+
+export async function getAllVenues() {
+    return await venuesCollection.find({}).toArray();
+}
+
+export async function deleteUserById(userId) {
+    const result = await usersCollection.deleteOne(
+        { _id: new mongodb.ObjectId(userId) }
+    );
+    return result;
+}
+
+export async function updateVenueField(venueId, fieldName, fieldValue) {
+    const updateData = {};
+    updateData[fieldName] = parseInt(fieldValue);
+    
+    const result = await venuesCollection.updateOne(
+        { _id: new mongodb.ObjectId(venueId) },
+        { $set: updateData }
+    );
+    return result;
+}
+
 
 export {connectDB};

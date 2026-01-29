@@ -58,9 +58,10 @@ const sampleEvents = [
 route.get('/',async (req, res) => {
     const today = new Date().toISOString().split('T')[0];
     const bookings = await loginModel.getBookingsByObjectId(req.session.user?.id);
+    const venues = await loginModel.getAllVenues();
 
     res.render('home.html', {
-        venues: sampleVenues,
+        venues: venues,
         events: sampleEvents,
         bookings: bookings,
         agency_name: req.session.user?.agency_name,
@@ -71,9 +72,10 @@ route.get('/',async (req, res) => {
 route.get('/home', async (req, res) => {
     const today = new Date().toISOString().split('T')[0];
     const bookings = await loginModel.getBookingsByObjectId(req.session.user?.id);
+    const venues = await loginModel.getAllVenues();
 
     res.render('home.html', {
-        venues: sampleVenues,
+        venues: venues,
         events: sampleEvents,
         bookings: bookings,
         agency_name: req.session.user?.agency_name,

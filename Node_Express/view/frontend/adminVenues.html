@@ -1,0 +1,128 @@
+{% extends 'base.html' %}
+
+{% block title %}Manage Venues - Admin{% endblock %}
+
+{% block content %}
+
+<div class="container mt-5">
+    <div class="ms-3 me-3 mb-5">
+        <div class="d-flex justify-content-between align-items-center mb-5">
+            <h2>Manage Venues</h2>
+            <div class="text-muted">Logged in as: {{ username }}</div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h4>All Venues (Click on values to edit)</h4>
+            </div>
+            <div class="card-body">
+                {% if venues %}
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Venue Name</th>
+                                    <th>Location</th>
+                                    <th>Capacity</th>
+                                    <th>Morning Price</th>
+                                    <th>Afternoon Price</th>
+                                    <th>Evening Price</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for venue in venues %}
+                                    <tr>
+                                        <td class="fw-bold">{{ venue.name }}</td>
+                                        <td>{{ venue.location }}</td>
+                                        <td class="editable" data-venue-id="{{ venue._id }}" data-field="capacity" style="cursor: pointer;">
+                                            <span class="value">{{ venue.capacity | formatNumber }}</span>
+                                            <input type="number" class="edit-input form-control form-control-sm" value="{{ venue.capacity }}" style="display: none;">
+                                        </td>
+                                        <td class="editable text-success" data-venue-id="{{ venue._id }}" data-field="morning_price" style="cursor: pointer;">
+                                            <span class="value">₱{{ venue.morning_price | formatNumber }}</span>
+                                            <input type="number" class="edit-input form-control form-control-sm" value="{{ venue.morning_price }}" style="display: none;">
+                                        </td>
+                                        <td class="editable text-success" data-venue-id="{{ venue._id }}" data-field="afternoon_price" style="cursor: pointer;">
+                                            <span class="value">₱{{ venue.afternoon_price | formatNumber }}</span>
+                                            <input type="number" class="edit-input form-control form-control-sm" value="{{ venue.afternoon_price }}" style="display: none;">
+                                        </td>
+                                        <td class="editable text-success" data-venue-id="{{ venue._id }}" data-field="evening_price" style="cursor: pointer;">
+                                            <span class="value">₱{{ venue.evening_price | formatNumber }}</span>
+                                            <input type="number" class="edit-input form-control form-control-sm" value="{{ venue.evening_price }}" style="display: none;">
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <p class="text-center text-muted">No venues found.</p>
+                {% endif %}
+            </div>
+        </div>
+        <br>
+        <button type="button" class="btn btn-primary" onclick="history.back()">Go Back</button>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const editableCells = document.querySelectorAll('.editable');
+    
+    editableCells.forEach(cell => {
+        const valueSpan = cell.querySelector('.value');
+        const input = cell.querySelector('.edit-input');
+        
+        cell.addEventListener('click', function() {
+            valueSpan.style.display = 'none';
+            input.style.display = 'block';
+            input.focus();
+            input.select();
+        });
+        
+        input.addEventListener('blur', function() {
+            const newValue = input.value;
+            const venueId = cell.dataset.venueId;
+            const fieldName = cell.dataset.field;
+            
+            fetch('/admin/update-venue', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    venueId: venueId,
+                    fieldName: fieldName,
+                    fieldValue: newValue
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const formattedValue = parseInt(newValue).toLocaleString('en-US', {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2
+                    });
+                    
+                    if (fieldName === 'capacity') {
+                        valueSpan.textContent = formattedValue;
+                    } else {
+                        valueSpan.textContent = '₱' + formattedValue;
+                    }
+                    
+                    input.style.display = 'none';
+                    valueSpan.style.display = 'inline';
+                }
+            });
+        });
+        
+        input.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                input.blur();
+            }
+        });
+    });
+});
+</script>
+
+{% endblock %}
