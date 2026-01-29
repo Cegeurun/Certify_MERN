@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+
+{% block title %}Admin Panel{% endblock %}
+
+{% block content %}
+
+<div class="container mt-5">
+    <div class="ms-3 me-3 mb-5">
+        <div class="d-flex justify-content-between align-items-center mb-5">
+            <h2>Admin Panel (Find)</h2>
+            <div class="text-muted">Logged in as: {{ username }}</div>
+        </div>
+
+        <!-- Find User Section -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h4>Find User Information</h4>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="/admin/find-user">
+                    <div class="mb-3">
+                        <label for="searchQuery" class="form-label">Searched User</label>
+                        <input type="text" class="form-control" id="searchQuery" name="searchQuery" value="{{ findUser }}" placeholder="Enter username" disabled>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Search User</button>
+                </form>
+            </div>
+        </div>
+
+        {% if userData %}
+        <div class="card mt-4">
+            <div class="card-header">
+                <h4>User Information</h4>
+            </div>
+            <div class="card-body">
+                <p><strong>Username:</strong> {{ userData.username }}</p>
+                <p><strong>Agency:</strong> {{ userData.agency_name }}</p>
+                <p><strong>User ID:</strong> {{ userData._id }}</p>
+            </div>
+        </div>
+        {% endif %}
+        <br>
+        <h3 class="mb-4 fw-bold text-dark">User Bookings</h3>
+                {% if bookings %}
+                    <div class="table-responsive shadow-lg rounded">
+                        <table class="table align-middle text-center">
+                            <thead class="bg-primary text-white">
+                                <tr>
+                                    <!-- <th>Receipt ID</th> -->
+                                    <th>Venue</th>
+                                    <th>Artist</th>
+                                    <th>Date</th>
+                                    <th>Time Slot</th>
+                                    <th>Amount Paid</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-light">
+                                {% for booking in bookings %}
+                                    <tr class="border-bottom">
+                                        <!-- <td class="fw-bold">{{ booking.receipt_id }}</td> -->
+                                        <td>{{ booking.venue_name }}</td>
+                                        <td>{{ booking.artist_name }}</td>
+                                        <td>{{ booking.date }}</td>
+                                        <td>{{ booking.time_slot }}</td>
+                                        <td class="fw-bold text-success">₱{{ booking.amount_expected | formatNumber }}</td>
+                                        <td>
+                                            <span class="badge {% if booking.status == 'Paid' %}bg-success{% else %}bg-danger{% endif %} p-2">
+                                                {{ booking.status }}
+                                            </span>
+                                        </td>
+                                        <td class="d-flex gap-2">
+                                            <!-- <a href="{{ url_for('view_receipt', booking_id=booking._id) }}" class="btn btn-info btn-sm">View Receipt</a> -->
+                                            {% if booking.status == "Paid" %}
+                                                <form method="POST" action="/cancel/{{booking._id}}">
+                                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">Cancel</button>
+                                                </form>
+                                            {% else %}
+                                                <!-- <span class="text-muted">Cancelled</span> -->
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <p class="text-center text-muted">The user has no bookings.</p>
+                {% endif %}
+                <br>
+                <button type="button" class="btn btn-primary" onclick="history.back()">Go Back</button>
+
+    </div>
+</div>
+
+{% endblock %}

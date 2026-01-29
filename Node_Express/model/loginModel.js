@@ -157,10 +157,15 @@ export async function createBooking(userId, venue, artistName, concertTitle, dat
     return result;
 }
 
+export async function getUserIdByUsername(username) {
+    return await usersCollection.findOne({ username: username });
+}
+
 // Get Bookings by User ID
 export async function getBookingsByUserId(userId) {
-    console.log(`Code is running...`)
-    console.log(`userId: ${userId}`)
+    // console.log(`Code is running...`)
+    // console.log(`userId: ${userId}`)
+
     const bookings = await bookingsCollection.find({ user_id: new mongodb.ObjectId(userId) }).toArray();
 
     console.log(`ObjectID: ${mongodb.ObjectId(userId)}`);
@@ -175,6 +180,21 @@ export async function getVenuesByName(venueName) {
     return await venuesCollection.findOne({ name: venueName });
 }
 
+export async function getUserCount()
+{
+    const userCount = await usersCollection.countDocuments({});
+    return userCount;
+}
+
+export async function getBookingsCount()
+{
+    return await db.collection('bookings').countDocuments({});
+}
+
+export async function getVenueCount()
+{
+    return await db.collection('venues').countDocuments({});
+}
 // Delete booking by Object Id
 
 export async function updateUsernameByUserId(userId, newUsername) {

@@ -21,7 +21,6 @@ route.post('/login', async (req,res) => {
     console.log(req.body);
 
     const user = await loginModel.verifyLogin(req.body.username, req.body.password);
-
     console.log(user);
     if (user.success == true)
     {
@@ -30,7 +29,8 @@ route.post('/login', async (req,res) => {
             id: user.id,
             username: user.username,
             agency_name: user.agency_name,
-            is_authenticated: true
+            is_authenticated: true,
+            findUser: 'Guest'
         };
         
         console.log('User logged in:', user.username);

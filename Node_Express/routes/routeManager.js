@@ -9,6 +9,7 @@ import homeRouter from './homeRoute.js';
 import profileRouter from './profileRoute.js';
 import receiptRouter from './receiptRoute.js';
 import venueRouter from './venueRoute.js';
+import adminRouter from './adminRoute.js';
 
 const routeManager = express.Router();
 
@@ -21,5 +22,6 @@ routeManager.use(loginRouter);
 routeManager.use(profileRouter);
 routeManager.use(receiptRouter);
 routeManager.use(venueRouter);
+routeManager.use(adminRouter);
 
 export default routeManager;
