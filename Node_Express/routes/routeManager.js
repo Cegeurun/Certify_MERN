@@ -13,7 +13,7 @@ import adminRouter from './adminRoute.js';
 
 const routeManager = express.Router();
 
-routeManager.use(express.static(path.join(__dirname, "view", "frontend")));
+// routeManager.use(express.static(path.join(__dirname, "view", "frontend")));
 
 routeManager.use(baseRouter);
 routeManager.use(dashboardRouter);

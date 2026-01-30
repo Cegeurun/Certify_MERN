@@ -28,6 +28,12 @@ route.get('/profile', async (req, res) => {
 route.post('/profile/update_username', async (req, res) => {
     const newUsername = req.body.new_username;
     const userId = req.session.user?.id;
+    
+    // Validate input to prevent path traversal
+    if (!newUsername || newUsername.includes('..') || newUsername.includes('/') || newUsername.includes('\\')) {
+        return res.status(400).send('Invalid username');
+    }
+    
     console.log(`${userId} - ${newUsername}`);
     if (userId && newUsername) {
 

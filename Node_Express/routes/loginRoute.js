@@ -18,9 +18,17 @@ route.get('/signup', (req, res) => {
 
 // Login user
 route.post('/login', async (req,res) => {
+    const { username, password } = req.body;
+    
+    // Validate input to prevent path traversal
+    if (!username || !password || 
+        username.includes('..') || username.includes('/') || username.includes('\\')) {
+        return res.status(400).send('Invalid input');
+    }
+
     console.log(req.body);
 
-    const user = await loginModel.verifyLogin(req.body.username, req.body.password);
+    const user = await loginModel.verifyLogin(username, password);
     console.log(user);
     if (user.success == true)
     {
@@ -52,10 +60,19 @@ route.post('/login', async (req,res) => {
 
 // Register user
 route.post('/signup',async (req,res) => {
-  console.log(req.body.username);
+    const { agency_name, username, password } = req.body;
+    
+    // Validate input to prevent path traversal
+    if (!username || !password || !agency_name || 
+        username.includes('..') || username.includes('/') || username.includes('\\') ||
+        agency_name.includes('..') || agency_name.includes('/') || agency_name.includes('\\')) {
+        return res.status(400).send('Invalid input');
+    }
+
+    console.log(req.body.username);
     console.log(req.body.password);
 
-    console.log(await loginModel.createUser(req.body.agency_name ,req.body.username, req.body.password));
+    console.log(await loginModel.createUser(agency_name, username, password));
 
     res.redirect('/login');
 });
