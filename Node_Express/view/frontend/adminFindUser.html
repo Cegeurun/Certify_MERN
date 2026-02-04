@@ -41,6 +41,9 @@
         {% endif %}
         <br>
         <h3 class="mb-4 fw-bold text-dark">User Bookings</h3>
+        <button class="btn btn-primary mb-3" type="button" data-bs-toggle="collapse" data-bs-target="#bookingForm">
+            ➕ Add a Booking
+        </button>
                 {% if bookings %}
                     <div class="table-responsive shadow-lg rounded">
                         <table class="table align-middle text-center">
@@ -88,10 +91,73 @@
                 {% else %}
                     <p class="text-center text-muted">The user has no bookings.</p>
                 {% endif %}
+                
+        <!-- Booking Form -->
+        <div class="collapse mt-4" id="bookingForm">
+            <div class="cardd shadow-lg border-0 p-4" style="background: #f8f9fa; border-radius: 12px;">
+                <h4 class="mb-4 text-dark fw-bold text-center">New Booking</h4>
+                <form method="POST" action="/admin/book-for-user">
+                    <input type="hidden" name="user_id" value="{{ userData._id }}">
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold text-dark">Artist Name</label>
+                        <input type="text" name="artist_name" class="form-control border-0 shadow-sm" required 
+                               style="border-radius: 8px;">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold text-dark">Concert Title</label>
+                        <input type="text" name="concert_title" class="form-control border-0 shadow-sm" required 
+                               style="border-radius: 8px;">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold text-dark">Venue</label>
+                        <select name="venue" class="form-select border-0 shadow-sm" required style="border-radius: 8px;">
+                            {% for venue in venues %}
+                                <option value="{{ venue.name }}">
+                                    {{ venue.name }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold text-dark">Date</label>
+                        <input type="date" name="date" class="form-control border-0 shadow-sm" required 
+                               style="border-radius: 8px;">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold text-dark">Time Slot</label>
+                        <select name="time_slot" class="form-select border-0 shadow-sm" required style="border-radius: 8px;">
+                            <option value="Morning">Morning (8:00 AM - 12:00 PM)</option>
+                            <option value="Afternoon">Afternoon (12:00 PM - 4:00 PM)</option>
+                            <option value="Evening">Evening (4:00 PM - 11:00 PM)</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold text-dark">Payment Method</label>
+                        <select name="payment_method" class="form-select border-0 shadow-sm" required style="border-radius: 8px;">
+                            <option value="Credit Card">Credit Card</option>
+                            <option value="GCash">GCash</option>
+                            <option value="PayPal">PayPal</option>
+                            <option value="Bank Transfer">Bank Transfer</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-success w-100 shadow-sm fw-bold" 
+                            style="border-radius: 8px; font-size: 18px;">Confirm Booking</button>
+                </form>
+            </div>
+        </div>
+                
                 <br>
                 <a href="/admin" class="btn btn-primary">Go Back</a>
 
     </div>
 </div>
+
+<script>
+// Prevent past dates in the date picker
+document.addEventListener("DOMContentLoaded", function() {
+    let today = new Date().toISOString().split('T')[0];
+    document.querySelector("input[name='date']").setAttribute("min", today);
+});
+</script>
 
 {% endblock %}

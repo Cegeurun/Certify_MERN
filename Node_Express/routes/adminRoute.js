@@ -39,18 +39,18 @@ route.get('/admin', async (req, res) => {
 });
 
 route.get('/admin/find', async (req, res) => {
-    // findUsername = req.session.user?.findUser;
-    // userBookings = loginModel.getBookingsByUserId(req.session.user?.username);
-    const bookings = await loginModel.getBookingsByObjectId(req.session.user?.id);
     const userData = await loginModel.getUserIdByUsername(req.session.user?.findUser);
     const userId = userData._id;
+    const bookings = await loginModel.getBookingsByObjectId(userId);
+    const venues = await loginModel.getAllVenues();
     console.log(`UserID: ${userId}`);
     console.log(userId);
     res.render('adminFindUser.html', {
         username: req.session.user?.username || 'Admin',
         findUser: req.session.user?.findUser || 'User',
         bookings: bookings,
-        userData: userData
+        userData: userData,
+        venues: venues
     });
 });
 
@@ -114,6 +114,42 @@ route.get('/admin/settings', async (req, res) => {
         username: req.session.user?.username || 'Admin',
         nodeVersion: process.version
     });
+});
+
+// Admin create booking for user
+route.post('/admin/book-for-user', async (req, res) => {
+    const { venue, artist_name, concert_title, date, time_slot, payment_method, user_id } = req.body;
+    
+    // Sanitize inputs to prevent format string attacks
+    const sanitize = (input) => {
+        if (!input) return '';
+        return String(input).replace(/[%]/g, '');
+    };
+    
+    const sanitizedVenue = sanitize(venue);
+    const sanitizedArtist = sanitize(artist_name);
+    const sanitizedTitle = sanitize(concert_title);
+    const sanitizedDate = sanitize(date);
+    const sanitizedTimeSlot = sanitize(time_slot);
+    const sanitizedPaymentMethod = sanitize(payment_method);
+    const sanitizedUserId = sanitize(user_id);
+    
+    const bookingResult = await loginModel.createBooking(sanitizedUserId, sanitizedVenue, sanitizedArtist, sanitizedTitle, sanitizedDate, sanitizedTimeSlot, req.body.amount_expected, req.body.receipt_id, sanitizedPaymentMethod);
+    
+    // Create transaction using the booking ID
+    const venueData = await loginModel.getVenuesByName(sanitizedVenue);
+    let amountPaid = 0;
+    if (sanitizedTimeSlot === 'Morning') {
+        amountPaid = venueData.morning_price;
+    } else if (sanitizedTimeSlot === 'Afternoon') {
+        amountPaid = venueData.afternoon_price;
+    } else if (sanitizedTimeSlot === 'Evening') {
+        amountPaid = venueData.evening_price;
+    }
+    
+    await loginModel.createTransaction(bookingResult.insertedId, sanitizedPaymentMethod, amountPaid);
+    
+    res.redirect('/admin/find');
 });
 
 // View All Transactions page
