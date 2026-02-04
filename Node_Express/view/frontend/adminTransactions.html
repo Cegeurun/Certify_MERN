@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block title %}All Transactions - Admin{% endblock %}
+
+{% block content %}
+
+<div class="container mt-5">
+    <div class="ms-3 me-3 mb-5">
+        <div class="d-flex justify-content-between align-items-center mb-5">
+            <h2>All Transactions</h2>
+            <div class="text-muted">Logged in as: {{ username }}</div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h4>System-Wide Transactions</h4>
+            </div>
+            <div class="card-body">
+                {% if transactions %}
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead class="bg-primary text-white">
+                                <tr>
+                                    <th>Transaction ID</th>
+                                    <th>Booking ID</th>
+                                    <th>Payment Method</th>
+                                    <th>Amount Paid</th>
+                                    <th>Payment Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for transaction in transactions %}
+                                    <tr>
+                                        <td class="fw-bold">{{ transaction._id }}</td>
+                                        <td>{{ transaction.booking_id }}</td>
+                                        <td>{{ transaction.payment_method }}</td>
+                                        <td class="text-success">₱{{ transaction.amount_paid | formatNumber }}</td>
+                                        <td>{{ transaction.payment_date }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <p class="text-center text-muted">No transactions found.</p>
+                {% endif %}
+            </div>
+        </div>
+        <br>
+        <a href="/admin" class="btn btn-primary">Go Back</a>
+    </div>
+</div>
+
+{% endblock %}

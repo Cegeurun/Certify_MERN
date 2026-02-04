@@ -1,6 +1,7 @@
 import express from 'express';
 import nunjucks from 'nunjucks';
 import session from 'express-session';
+import helmet from 'helmet';
 import routeManager from './routes/routeManager.js';
 import {connectDB} from './model/loginModel.js';
 import path from 'path';
@@ -61,9 +62,50 @@ nunjucksEnv.addGlobal('url_for', function(route, options = {}) {
     return routes[route] ? routes[route](options.booking_id) : '#';
 });
 
+// Security middleware
+app.use(helmet({
+    contentSecurityPolicy: {
+        directives: {
+            defaultSrc: ["'self'"],
+            scriptSrc: ["'self'", "https://cdn.jsdelivr.net"],
+            scriptSrcElem: ["'self'", "https://cdn.jsdelivr.net"],
+            scriptSrcAttr: ["'none'"],
+            styleSrc: ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net"],
+            styleSrcElem: ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net"],
+            styleSrcAttr: ["'unsafe-inline'"],
+            imgSrc: ["'self'", "data:"],
+            fontSrc: ["'self'", "https://cdn.jsdelivr.net"],
+            connectSrc: ["'self'"],
+            mediaSrc: ["'self'"],
+            formAction: ["'self'"],
+            frameAncestors: ["'none'"],
+            frameSrc: ["'none'"],
+            childSrc: ["'self'"],
+            workerSrc: ["'self'"],
+            manifestSrc: ["'self'"],
+            navigateTo: ["'self'"],
+            prefetchSrc: ["'self'"],
+            baseUri: ["'self'"],
+            objectSrc: ["'none'"],
+            upgradeInsecureRequests: []
+        }
+    }
+}));
+
 // Middleware for parsing request bodies
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Sanitize User-Agent header to prevent User-Agent based attacks
+app.use((req, res, next) => {
+    if (req.headers['user-agent']) {
+        const userAgent = req.headers['user-agent'];
+        if (userAgent.length > 500 || /[<>'"{}]/.test(userAgent)) {
+            return res.status(400).send('Invalid request');
+        }
+    }
+    next();
+});
 
 // Session middleware (for user authentication)
 app.use(session({

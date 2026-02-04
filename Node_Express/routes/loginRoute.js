@@ -62,17 +62,24 @@ route.post('/login', async (req,res) => {
 route.post('/signup',async (req,res) => {
     const { agency_name, username, password } = req.body;
     
-    // Validate input to prevent path traversal
+    // Validate input to prevent path traversal and format string attacks
     if (!username || !password || !agency_name || 
         username.includes('..') || username.includes('/') || username.includes('\\') ||
         agency_name.includes('..') || agency_name.includes('/') || agency_name.includes('\\')) {
         return res.status(400).send('Invalid input');
     }
+    
+    // Sanitize inputs to prevent format string attacks
+    const sanitize = (input) => {
+        if (!input) return '';
+        return String(input).replace(/[%]/g, '');
+    };
+    
+    const sanitizedAgency = sanitize(agency_name);
+    const sanitizedUsername = sanitize(username);
+    const sanitizedPassword = sanitize(password);
 
-    console.log(req.body.username);
-    console.log(req.body.password);
-
-    console.log(await loginModel.createUser(agency_name, username, password));
+    await loginModel.createUser(sanitizedAgency, sanitizedUsername, sanitizedPassword);
 
     res.redirect('/login');
 });

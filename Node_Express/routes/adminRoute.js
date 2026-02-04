@@ -116,4 +116,13 @@ route.get('/admin/settings', async (req, res) => {
     });
 });
 
+// View All Transactions page
+route.get('/admin/transactions', async (req, res) => {
+    const transactions = await loginModel.getAllTransactions();
+    res.render('adminTransactions.html', {
+        username: req.session.user?.username || 'Admin',
+        transactions: transactions
+    });
+});
+
 export default route;

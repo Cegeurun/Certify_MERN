@@ -142,13 +142,12 @@ export async function createBooking(userId, venue, artistName, concertTitle, dat
     console.log(`Amount Expected: ${amountExpected}`);
     const newBooking = {
         user_id: new mongodb.ObjectId(userId),
-        // venue_id: new mongodb.ObjectId(venueId),
         venue_name: venue,
         artist_name: artistName,
         concert_title: concertTitle,
         date: new Date(date),
         time_slot: timeSlot,
-        amount_expected: amountExpected,
+        amount_expected: new mongodb.Int32(amountExpected),
         status: 'Paid',
         receipt_id: receiptId
     };
@@ -156,6 +155,35 @@ export async function createBooking(userId, venue, artistName, concertTitle, dat
     console.log(newBooking);
     
     const result = await bookingsCollection.insertOne(newBooking);
+    return result;
+}
+
+// Create Transaction
+export async function createTransaction(bookingId, paymentMethod, amountPaid) {
+    // Validate and sanitize inputs
+    if (!bookingId || !paymentMethod || amountPaid === undefined || amountPaid === null) {
+        throw new Error('Missing required transaction fields');
+    }
+    
+    // Sanitize payment method to prevent injection attacks
+    const sanitizedPaymentMethod = String(paymentMethod).replace(/[%<>'"{}]/g, '').substring(0, 50);
+    
+    // Validate amount is a positive number
+    const validatedAmount = parseFloat(amountPaid);
+    if (isNaN(validatedAmount) || validatedAmount < 0) {
+        throw new Error('Invalid amount for transaction');
+    }
+    
+    const newTransaction = {
+        booking_id: new mongodb.ObjectId(bookingId),
+        payment_method: sanitizedPaymentMethod,
+        amount_paid: new mongodb.Double(validatedAmount),
+        payment_date: new Date()
+    };
+    
+    console.log('Transaction document:', JSON.stringify(newTransaction, null, 2));
+    
+    const result = await transactionsCollection.insertOne(newTransaction);
     return result;
 }
 
@@ -233,6 +261,10 @@ export async function getAllBookings() {
 
 export async function getAllVenues() {
     return await venuesCollection.find({}).toArray();
+}
+
+export async function getAllTransactions() {
+    return await transactionsCollection.find({}).toArray();
 }
 
 export async function deleteUserById(userId) {

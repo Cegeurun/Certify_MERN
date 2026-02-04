@@ -61,68 +61,12 @@
             </div>
         </div>
         <br>
-        <button type="button" class="btn btn-primary" onclick="history.back()">Go Back</button>
+        <a href="/admin" class="btn btn-primary">Go Back</a>
     </div>
 </div>
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const editableCells = document.querySelectorAll('.editable');
-    
-    editableCells.forEach(cell => {
-        const valueSpan = cell.querySelector('.value');
-        const input = cell.querySelector('.edit-input');
-        
-        cell.addEventListener('click', function() {
-            valueSpan.style.display = 'none';
-            input.style.display = 'block';
-            input.focus();
-            input.select();
-        });
-        
-        input.addEventListener('blur', function() {
-            const newValue = input.value;
-            const venueId = cell.dataset.venueId;
-            const fieldName = cell.dataset.field;
-            
-            fetch('/admin/update-venue', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    venueId: venueId,
-                    fieldName: fieldName,
-                    fieldValue: newValue
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    const formattedValue = parseInt(newValue).toLocaleString('en-US', {
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 2
-                    });
-                    
-                    if (fieldName === 'capacity') {
-                        valueSpan.textContent = formattedValue;
-                    } else {
-                        valueSpan.textContent = '₱' + formattedValue;
-                    }
-                    
-                    input.style.display = 'none';
-                    valueSpan.style.display = 'inline';
-                }
-            });
-        });
-        
-        input.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                input.blur();
-            }
-        });
-    });
-});
-</script>
+{% endblock %}
 
+{% block scripts %}
+<script src="/js/admin.js"></script>
 {% endblock %}

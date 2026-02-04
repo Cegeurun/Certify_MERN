@@ -39,10 +39,37 @@ route.post("/cancel/:bookingId", async (req, res) => {
 })
 
 route.post("/book", async (req, res) => {
-        console.log(`Venue: ${req.body.venue}`)
-        console.log(await loginModel.createBooking(req.session.user?.id, req.body.venue, req.body.artist_name, req.body.concert_title, req.body.date, req.body.time_slot, req.body.amount_expected, req.body.status, req.body.receipt_id));
-        
-        res.redirect('/dashboard');
+    const { venue, artist_name, concert_title, date, time_slot, payment_method } = req.body;
+    
+    // Sanitize inputs to prevent format string attacks
+    const sanitize = (input) => {
+        if (!input) return '';
+        return String(input).replace(/[%]/g, '');
+    };
+    
+    const sanitizedVenue = sanitize(venue);
+    const sanitizedArtist = sanitize(artist_name);
+    const sanitizedTitle = sanitize(concert_title);
+    const sanitizedDate = sanitize(date);
+    const sanitizedTimeSlot = sanitize(time_slot);
+    const sanitizedPaymentMethod = sanitize(payment_method);
+    
+    const bookingResult = await loginModel.createBooking(req.session.user?.id, sanitizedVenue, sanitizedArtist, sanitizedTitle, sanitizedDate, sanitizedTimeSlot, req.body.amount_expected, req.body.status, req.body.receipt_id);
+    
+    // Create transaction using the booking ID
+    const venueData = await loginModel.getVenuesByName(sanitizedVenue);
+    let amountPaid = 0;
+    if (sanitizedTimeSlot === 'Morning') {
+        amountPaid = venueData.morning_price;
+    } else if (sanitizedTimeSlot === 'Afternoon') {
+        amountPaid = venueData.afternoon_price;
+    } else if (sanitizedTimeSlot === 'Evening') {
+        amountPaid = venueData.evening_price;
+    }
+    
+    await loginModel.createTransaction(bookingResult.insertedId, sanitizedPaymentMethod, amountPaid);
+    
+    res.redirect('/dashboard');
 })
 
 // `/cancel/${booking_id || options.booking_id}`
